@@ -89,7 +89,6 @@ $messaggioHTML = "
         <tr><th>Cellulare</th><td><a href='tel:$cellulare'>$cellulare</a></td></tr>
         <tr><th>Operazione</th><td>$tipo_op</td></tr>
         <tr><th>Note</th><td>" . nl2br($note) . "</td></tr>
-        <tr><th>Consenso Privacy</th><td>Accettato ai sensi del GDPR</td></tr>
       </table>
     </div>
     <div class='footer'>

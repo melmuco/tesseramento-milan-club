@@ -106,15 +106,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // Verifica consenso privacy
-    const privacy = document.getElementById('privacy');
-    if (privacy && !privacy.checked) {
-      const container = privacy.closest('.checkbox-container');
-      if (container) container.classList.add('has-error');
-      isValid = false;
-      if (!firstInvalidField) firstInvalidField = privacy;
-    }
-
     if (firstInvalidField) {
       firstInvalidField.focus();
       firstInvalidField.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -172,7 +163,7 @@ Provincia:           ${data.provincia || '-'}
 Email Socio:         ${data.email || '-'}
 Cellulare:           ${data.cellulare || '-'}
 
-Operazione:          ${data.tipo_operazione || 'Nuovo Tesseramento'}
+Operazione:          ${data.tipo_operazione || 'Nuovo Socio'}
 Note Aggiuntive:     ${data.note ? data.note : 'Nessuna'}
 Data Compilazione:   ${new Date().toLocaleString('it-IT')}
 ===================================================`;
@@ -306,8 +297,7 @@ Data Compilazione:   ${new Date().toLocaleString('it-IT')}
           'Email_Socio': data.email,
           'Telefono_Cellulare': data.cellulare,
           'Tipo_Operazione': data.tipo_operazione,
-          'Note': data.note || 'Nessuna',
-          'Consenso_Privacy': 'ACCETTATO (GDPR)'
+          'Note': data.note || 'Nessuna'
         })
       });
 

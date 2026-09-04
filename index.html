@@ -378,41 +378,23 @@
 
           <div class="form-grid single-col">
             <div class="form-group">
-              <label class="field-label">Operazione richiesta:</label>
+              <label class="field-label">Tipo richiesta: <span class="required">*</span></label>
               <div class="procedure-options">
                 <label class="radio-card">
-                  <input type="radio" name="tipo_operazione" value="Nuovo Tesseramento / Rinnovo" checked>
+                  <input type="radio" name="tipo_operazione" value="Nuovo Socio" checked>
                   <span class="radio-custom"></span>
                   <div class="radio-text">
-                    <strong>Nuova iscrizione o Rinnovo tessera</strong>
-                    <small>Registrazione o convalida tessera socio per la stagione</small>
+                    <strong>Nuovo Socio</strong>
+                    <small>Prima iscrizione al Milan Club Marmirolo</small>
                   </div>
                 </label>
 
                 <label class="radio-card">
-                  <input type="radio" name="tipo_operazione" value="Aggiornamento Dati Anagrafici">
+                  <input type="radio" name="tipo_operazione" value="Rinnovo">
                   <span class="radio-custom"></span>
                   <div class="radio-text">
-                    <strong>Aggiornamento dati</strong>
-                    <small>Modifica di indirizzo, recapiti o stato del socio</small>
-                  </div>
-                </label>
-
-                <label class="radio-card warning-card">
-                  <input type="radio" name="tipo_operazione" value="Segnalazione Decesso">
-                  <span class="radio-custom"></span>
-                  <div class="radio-text">
-                    <strong>Segnalazione decesso socio</strong>
-                    <small>Comunicazione amministrativa di avvenuto decesso</small>
-                  </div>
-                </label>
-
-                <label class="radio-card danger-card">
-                  <input type="radio" name="tipo_operazione" value="Dimissioni / Provvedimento disciplinare">
-                  <span class="radio-custom"></span>
-                  <div class="radio-text">
-                    <strong>Espulsione / Comportamenti illeciti / Dimissioni</strong>
-                    <small>Segnalazione per il Consiglio Direttivo del Club</small>
+                    <strong>Rinnovo</strong>
+                    <small>Rinnovo tessera socio per la nuova stagione</small>
                   </div>
                 </label>
               </div>
@@ -430,17 +412,6 @@
               ></textarea>
             </div>
           </div>
-        </section>
-
-        <!-- Consenso Privacy -->
-        <section class="form-section privacy-section">
-          <label class="checkbox-container">
-            <input type="checkbox" id="privacy" name="consenso_privacy" required>
-            <span class="checkmark"></span>
-            <span class="checkbox-label">
-              Dichiaro che i dati forniti sono veritieri e acconsento al loro trattamento da parte del <strong>Milan Club Marmirolo</strong> ai fini della gestione del tesseramento e delle comunicazioni sociali (GDPR 2016/679). <span class="required">*</span>
-            </span>
-          </label>
         </section>
 
         <!-- Form Actions / Buttons -->
