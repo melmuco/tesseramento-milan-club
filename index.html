@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <meta name="theme-color" content="#b30000">
+  <meta name="description" content="Modulo di iscrizione e aggiornamento dati socio - Milan Club Marmirolo">
+  <title>Milan Club Marmirolo - Scheda Dati Socio</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Background decorative elements -->
+  <div class="bg-stripes" aria-hidden="true">
+    <div class="stripe red"></div>
+    <div class="stripe black"></div>
+    <div class="stripe red"></div>
+  </div>
+
+  <main class="container">
+    
+    <!-- Header Card -->
+    <header class="club-header">
+      <div class="header-badge">
+        <div class="logo-circle">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="club-crest" aria-label="Stemma Milan Club">
+            <ellipse cx="24" cy="24" rx="20" ry="22" fill="#d00000" stroke="#121212" stroke-width="2"/>
+            <path d="M14 8C14 8 20 6 24 6C28 6 34 8 34 8V26C34 33 24 42 24 42C24 42 14 33 14 26V8Z" fill="#ffffff" stroke="#121212" stroke-width="2"/>
+            <!-- Strisce rossonere nello scudetto -->
+            <path d="M16 9V26C16 30 20 35 24 39C28 35 32 30 32 26V9" fill="#121212"/>
+            <path d="M19 8V28C19 32 22 35 24 37V8H19Z" fill="#d00000"/>
+            <path d="M29 8V28C29 32 26 35 24 37V8H29Z" fill="#ffffff"/>
+            <!-- Croce di San Giorgio (Milano) -->
+            <rect x="23" y="10" width="2" height="16" fill="#d00000"/>
+            <rect x="16" y="17" width="16" height="2" fill="#d00000"/>
+          </svg>
+        </div>
+        <div class="header-titles">
+          <span class="tag-official">ASSOCIAZIONE ITALIANA MILAN CLUB</span>
+          <h1 class="club-name">MILAN CLUB MARMIROLO</h1>
+          <p class="subtitle">Scheda Anagrafica &amp; Tesseramento Soci</p>
+        </div>
+      </div>
+      
+      <div class="status-banner">
+        <div class="status-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+        </div>
+        <p>I dati compilati verranno inviati direttamente via email alla segreteria: <strong>milanclubmarmirolo@gmail.com</strong></p>
+      </div>
+    </header>
+
+    <!-- Main Form Card -->
+    <div class="form-card">
+      <form id="socioForm" action="https://formsubmit.co/milanclubmarmirolo@gmail.com" method="POST" novalidate>
+        
+        <!-- FormSubmit configuration hidden inputs -->
+        <input type="hidden" name="_subject" id="emailSubject" value="Nuova Scheda Socio - Milan Club Marmirolo">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_honey" style="display:none">
+
+        <!-- Ruolo / Tipo Socio -->
+        <section class="form-section">
+          <div class="section-header">
+            <span class="section-number">1</span>
+            <h2>Qualifica / Ruolo nel Club</h2>
+          </div>
+          <div class="form-grid single-col">
+            <div class="form-group">
+              <label for="ruolo" class="field-label">
+                Ruolo o Qualifica <span class="required">*</span>
+              </label>
+              <div class="select-wrapper">
+                <select id="ruolo" name="ruolo" class="form-control" required>
+                  <option value="Socio Ordinario" selected>Socio Ordinario</option>
+                  <option value="Presidente">Presidente</option>
+                  <option value="Vice Presidente">Vice Presidente</option>
+                  <option value="Segretario">Segretario</option>
+                  <option value="Tesoriere">Tesoriere</option>
+                  <option value="Consigliere">Consigliere</option>
+                  <option value="Socio Sostenitore">Socio Sostenitore</option>
+                  <option value="Socio Junior">Socio Junior (Under 14)</option>
+                </select>
+                <div class="select-arrow" aria-hidden="true">▼</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Dati Anagrafici -->
+        <section class="form-section">
+          <div class="section-header">
+            <span class="section-number">2</span>
+            <h2>Dati Anagrafici</h2>
+          </div>
+
+          <div class="form-grid two-col">
+            <!-- Nome -->
+            <div class="form-group">
+              <label for="nome" class="field-label">
+                Nome <span class="required">*</span>
+              </label>
+              <input 
+                type="text" 
+                id="nome" 
+                name="nome" 
+                class="form-control" 
+                placeholder="es. Marco" 
+                autocomplete="given-name" 
+                required 
+                minlength="2"
+                autocapitalize="words"
+              >
+              <span class="field-hint" id="nome-error">Inserisci il nome</span>
+            </div>
+
+            <!-- Cognome -->
+            <div class="form-group">
+              <label for="cognome" class="field-label">
+                Cognome <span class="required">*</span>
+              </label>
+              <input 
+                type="text" 
+                id="cognome" 
+                name="cognome" 
+                class="form-control" 
+                placeholder="es. Lorenzi" 
+                autocomplete="family-name" 
+                required 
+                minlength="2"
+                autocapitalize="words"
+              >
+              <span class="field-hint" id="cognome-error">Inserisci il cognome</span>
+            </div>
+          </div>
+
+          <div class="form-grid two-col">
+            <!-- Data di Nascita -->
+            <div class="form-group">
+              <label for="data_nascita" class="field-label">
+                Data di Nascita <span class="required">*</span>
+              </label>
+              <div class="input-with-icon">
+                <input 
+                  type="date" 
+                  id="data_nascita" 
+                  name="data_nascita" 
+                  class="form-control" 
+                  autocomplete="bday" 
+                  required
+                >
+              </div>
+              <span class="field-hint" id="data_nascita-error">Seleziona la data di nascita</span>
+            </div>
+
+            <!-- Luogo di Nascita -->
+            <div class="form-group">
+              <label for="luogo_nascita" class="field-label">
+                Luogo di Nascita <span class="required">*</span>
+              </label>
+              <input 
+                type="text" 
+                id="luogo_nascita" 
+                name="luogo_nascita" 
+                class="form-control" 
+                placeholder="es. Mantova" 
+                required
+                autocapitalize="words"
+              >
+              <span class="field-hint" id="luogo_nascita-error">Inserisci il comune di nascita</span>
+            </div>
+          </div>
+
+          <div class="form-grid single-col">
+            <!-- Codice Fiscale -->
+            <div class="form-group">
+              <label for="codice_fiscale" class="field-label">
+                Codice Fiscale <span class="required">*</span>
+              </label>
+              <div class="cf-input-container">
+                <input 
+                  type="text" 
+                  id="codice_fiscale" 
+                  name="codice_fiscale" 
+                  class="form-control uppercase" 
+                  placeholder="es. LRNMRC83P27E897A" 
+                  maxlength="16" 
+                  minlength="16"
+                  pattern="^[A-Za-z]{6}[0-9]{2}[A-Za-z]{1}[0-9]{2}[A-Za-z]{1}[0-9]{3}[A-Za-z]{1}$" 
+                  autocomplete="off"
+                  autocapitalize="characters"
+                  spellcheck="false"
+                  required
+                >
+                <span class="char-count" id="cfCharCount">0/16</span>
+              </div>
+              <span class="field-hint" id="cf-error">Codice fiscale di 16 caratteri alfanumerici</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Residenza e Domicilio -->
+        <section class="form-section">
+          <div class="section-header">
+            <span class="section-number">3</span>
+            <h2>Indirizzo di Residenza</h2>
+          </div>
+
+          <div class="form-grid address-grid">
+            <!-- Indirizzo -->
+            <div class="form-group address-street">
+              <label for="indirizzo" class="field-label">
+                Indirizzo (Via / Piazza / Viale) <span class="required">*</span>
+              </label>
+              <input 
+                type="text" 
+                id="indirizzo" 
+                name="indirizzo" 
+                class="form-control" 
+                placeholder="es. Via Belbrolo" 
+                autocomplete="address-line1" 
+                required
+                autocapitalize="words"
+              >
+              <span class="field-hint">Inserisci l'indirizzo</span>
+            </div>
+
+            <!-- Numero Civico -->
+            <div class="form-group address-number">
+              <label for="civico" class="field-label">
+                N. Civico <span class="required">*</span>
+              </label>
+              <input 
+                type="text" 
+                id="civico" 
+                name="civico" 
+                class="form-control" 
+                placeholder="es. 3" 
+                autocomplete="address-line2" 
+                required
+              >
+              <span class="field-hint">Civico</span>
+            </div>
+          </div>
+
+          <div class="form-grid three-col">
+            <!-- CAP -->
+            <div class="form-group">
+              <label for="cap" class="field-label">
+                CAP <span class="required">*</span>
+              </label>
+              <input 
+                type="text" 
+                id="cap" 
+                name="cap" 
+                class="form-control" 
+                placeholder="es. 46045" 
+                pattern="[0-9]{5}" 
+                maxlength="5" 
+                inputmode="numeric" 
+                autocomplete="postal-code" 
+                required
+              >
+              <span class="field-hint">5 cifre numeriche</span>
+            </div>
+
+            <!-- Località / Comune -->
+            <div class="form-group locality-group">
+              <label for="localita" class="field-label">
+                Località / Comune <span class="required">*</span>
+              </label>
+              <input 
+                type="text" 
+                id="localita" 
+                name="localita" 
+                class="form-control" 
+                placeholder="es. Marmirolo" 
+                autocomplete="address-level2" 
+                required
+                autocapitalize="words"
+              >
+              <span class="field-hint">Comune o frazione</span>
+            </div>
+
+            <!-- Provincia -->
+            <div class="form-group prov-group">
+              <label for="provincia" class="field-label">
+                Provincia <span class="required">*</span>
+              </label>
+              <input 
+                type="text" 
+                id="provincia" 
+                name="provincia" 
+                class="form-control uppercase" 
+                placeholder="es. Mantova o MN" 
+                autocomplete="address-level1" 
+                required
+                autocapitalize="characters"
+              >
+              <span class="field-hint">Sigla o nome</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Recapiti di Contatto -->
+        <section class="form-section">
+          <div class="section-header">
+            <span class="section-number">4</span>
+            <h2>Recapiti di Contatto</h2>
+          </div>
+
+          <div class="form-grid two-col">
+            <!-- Email -->
+            <div class="form-group">
+              <label for="email" class="field-label">
+                Indirizzo Email <span class="required">*</span>
+              </label>
+              <div class="input-with-icon">
+                <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                <input 
+                  type="email" 
+                  id="email" 
+                  name="email" 
+                  class="form-control icon-padded" 
+                  placeholder="es. marcolorenzi83@gmail.com" 
+                  autocomplete="email" 
+                  inputmode="email"
+                  required
+                >
+              </div>
+              <span class="field-hint" id="email-error">Inserisci un'email valida</span>
+            </div>
+
+            <!-- Telefono Cellulare -->
+            <div class="form-group">
+              <label for="cellulare" class="field-label">
+                Telefono Cellulare <span class="required">*</span>
+              </label>
+              <div class="input-with-icon">
+                <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                  <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                </svg>
+                <input 
+                  type="tel" 
+                  id="cellulare" 
+                  name="cellulare" 
+                  class="form-control icon-padded" 
+                  placeholder="es. 3478214957" 
+                  autocomplete="tel" 
+                  inputmode="tel"
+                  required
+                >
+              </div>
+              <span class="field-hint" id="cellulare-error">Numero di cellulare per comunicazioni</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tipo di Pratica / Procedure Speciali -->
+        <section class="form-section">
+          <div class="section-header">
+            <span class="section-number">5</span>
+            <h2>Tipo Richiesta &amp; Note</h2>
+          </div>
+
+          <div class="form-grid single-col">
+            <div class="form-group">
+              <label class="field-label">Operazione richiesta:</label>
+              <div class="procedure-options">
+                <label class="radio-card">
+                  <input type="radio" name="tipo_operazione" value="Nuovo Tesseramento / Rinnovo" checked>
+                  <span class="radio-custom"></span>
+                  <div class="radio-text">
+                    <strong>Nuova iscrizione o Rinnovo tessera</strong>
+                    <small>Registrazione o convalida tessera socio per la stagione</small>
+                  </div>
+                </label>
+
+                <label class="radio-card">
+                  <input type="radio" name="tipo_operazione" value="Aggiornamento Dati Anagrafici">
+                  <span class="radio-custom"></span>
+                  <div class="radio-text">
+                    <strong>Aggiornamento dati</strong>
+                    <small>Modifica di indirizzo, recapiti o stato del socio</small>
+                  </div>
+                </label>
+
+                <label class="radio-card warning-card">
+                  <input type="radio" name="tipo_operazione" value="Segnalazione Decesso">
+                  <span class="radio-custom"></span>
+                  <div class="radio-text">
+                    <strong>Segnalazione decesso socio</strong>
+                    <small>Comunicazione amministrativa di avvenuto decesso</small>
+                  </div>
+                </label>
+
+                <label class="radio-card danger-card">
+                  <input type="radio" name="tipo_operazione" value="Dimissioni / Provvedimento disciplinare">
+                  <span class="radio-custom"></span>
+                  <div class="radio-text">
+                    <strong>Espulsione / Comportamenti illeciti / Dimissioni</strong>
+                    <small>Segnalazione per il Consiglio Direttivo del Club</small>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Note / Messaggio Aggiuntivo -->
+            <div class="form-group">
+              <label for="note" class="field-label">Note o comunicazioni aggiuntive (facoltativo)</label>
+              <textarea 
+                id="note" 
+                name="note" 
+                rows="3" 
+                class="form-control textarea" 
+                placeholder="Eventuali annotazioni, numero tessera precedente, o dettagli per il Consiglio..."
+              ></textarea>
+            </div>
+          </div>
+        </section>
+
+        <!-- Consenso Privacy -->
+        <section class="form-section privacy-section">
+          <label class="checkbox-container">
+            <input type="checkbox" id="privacy" name="consenso_privacy" required>
+            <span class="checkmark"></span>
+            <span class="checkbox-label">
+              Dichiaro che i dati forniti sono veritieri e acconsento al loro trattamento da parte del <strong>Milan Club Marmirolo</strong> ai fini della gestione del tesseramento e delle comunicazioni sociali (GDPR 2016/679). <span class="required">*</span>
+            </span>
+          </label>
+        </section>
+
+        <!-- Form Actions / Buttons -->
+        <div class="form-actions">
+          <button type="submit" id="submitBtn" class="btn btn-primary">
+            <span class="btn-text">INVIA DATI A MILAN CLUB MARMIROLO</span>
+            <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+            <span class="spinner" aria-hidden="true"></span>
+          </button>
+
+          <div class="secondary-actions">
+            <button type="button" id="mailtoBtn" class="btn btn-secondary" title="Apre la tua applicazione email con i dati già compilati">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+              <span>Oppure invia tramite App Email</span>
+            </button>
+
+            <button type="reset" id="resetBtn" class="btn btn-outline">
+              Cancella tutto
+            </button>
+          </div>
+        </div>
+
+        <!-- Security & Destination Note -->
+        <div class="security-footer">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          <span>Destinatario email certificato: <strong>milanclubmarmirolo@gmail.com</strong></span>
+        </div>
+
+      </form>
+    </div>
+
+    <footer class="page-footer">
+      <p>Sempre con te, solo con te, Milan Club Marmirolo &copy; <span id="currentYear"></span></p>
+    </footer>
+
+  </main>
+
+  <!-- Modal di Conferma Successo -->
+  <div class="modal-backdrop" id="successModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card">
+      <div class="modal-badge-success">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+
+      <h3 id="modalTitle">Dati Inviati con Successo!</h3>
+      <p class="modal-subtitle">L'email con i dati del socio è stata recapitata alla segreteria del Milan Club Marmirolo.</p>
+
+      <div class="modal-summary" id="modalSummary">
+        <!-- Riempito dinamicamente da JS -->
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-primary" id="modalCloseBtn">
+          Compila Nuova Scheda
+        </button>
+        <button type="button" class="btn btn-secondary" id="printBtn">
+          Stampa / Salva PDF
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
