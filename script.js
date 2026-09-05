@@ -63,6 +63,194 @@ document.addEventListener('DOMContentLoaded', () => {
     input.addEventListener('change', () => clearFieldError(input));
   });
 
+  // --- MOTORE CALCOLO CODICE FISCALE ITALIANO ---
+  const nomeInput = document.getElementById('nome');
+  const cognomeInput = document.getElementById('cognome');
+  const dataNascitaInput = document.getElementById('data_nascita');
+  const luogoNascitaInput = document.getElementById('luogo_nascita');
+  const autoCfBtn = document.getElementById('autoCfBtn');
+  const comuniDatalist = document.getElementById('comuniList');
+
+  // Popola datalist con i comuni italiani e stati esteri
+  if (comuniDatalist && window.COMUNI_NAMES && window.COMUNI_NAMES.length > 0) {
+    const frag = document.createDocumentFragment();
+    window.COMUNI_NAMES.forEach(cName => {
+      const opt = document.createElement('option');
+      opt.value = cName;
+      frag.appendChild(opt);
+    });
+    comuniDatalist.appendChild(frag);
+  }
+
+  function getSelectedSesso() {
+    const checked = form.querySelector('input[name="sesso"]:checked');
+    return checked ? checked.value : 'M';
+  }
+
+  function normalizeChars(str) {
+    return (str || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toUpperCase()
+      .replace(/[^A-Z]/g, '');
+  }
+
+  function extractConsonantsAndVowels(str) {
+    const norm = normalizeChars(str);
+    const consonants = [];
+    const vowels = [];
+    const VOWELS = new Set(['A', 'E', 'I', 'O', 'U']);
+    for (const char of norm) {
+      if (VOWELS.has(char)) vowels.push(char);
+      else consonants.push(char);
+    }
+    return { consonants, vowels };
+  }
+
+  function getCognomeCode(cognome) {
+    const { consonants, vowels } = extractConsonantsAndVowels(cognome);
+    return (consonants.join('') + vowels.join('') + 'XXX').slice(0, 3);
+  }
+
+  function getNomeCode(nome) {
+    const { consonants, vowels } = extractConsonantsAndVowels(nome);
+    if (consonants.length >= 4) {
+      return consonants[0] + consonants[2] + consonants[3];
+    }
+    return (consonants.join('') + vowels.join('') + 'XXX').slice(0, 3);
+  }
+
+  const CF_MONTHS = ['A','B','C','D','E','H','L','M','P','R','S','T'];
+  const CF_ODD = {
+    '0': 1, '1': 0, '2': 5, '3': 7, '4': 9, '5': 13, '6': 15, '7': 17, '8': 19, '9': 21,
+    'A': 1, 'B': 0, 'C': 5, 'D': 7, 'E': 9, 'F': 13, 'G': 15, 'H': 17, 'I': 19, 'J': 21,
+    'K': 2, 'L': 4, 'M': 18, 'N': 20, 'O': 11, 'P': 3, 'Q': 6, 'R': 8, 'S': 12, 'T': 14,
+    'U': 16, 'V': 10, 'W': 22, 'X': 25, 'Y': 24, 'Z': 23
+  };
+  const CF_EVEN = {
+    '0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9,
+    'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4, 'F': 5, 'G': 6, 'H': 7, 'I': 8, 'J': 9,
+    'K': 10, 'L': 11, 'M': 12, 'N': 13, 'O': 14, 'P': 15, 'Q': 16, 'R': 17, 'S': 18, 'T': 19,
+    'U': 20, 'V': 21, 'W': 22, 'X': 23, 'Y': 24, 'Z': 25
+  };
+
+  function getControlChar(first15) {
+    let sum = 0;
+    for (let i = 0; i < 15; i++) {
+      const char = first15[i];
+      if (i % 2 === 0) {
+        sum += CF_ODD[char] || 0;
+      } else {
+        sum += CF_EVEN[char] || 0;
+      }
+    }
+    return String.fromCharCode(65 + (sum % 26));
+  }
+
+  function resolveCodiceCatastale(luogo) {
+    if (!luogo) return null;
+    const raw = luogo.trim();
+    if (/^[A-Za-z]\d{3}$/.test(raw)) {
+      return raw.toUpperCase();
+    }
+    const cleaned = raw.replace(/\s*\(.*?\)\s*/g, '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toUpperCase()
+      .trim();
+
+    if (window.COMUNI_DB && window.COMUNI_DB[cleaned]) {
+      return window.COMUNI_DB[cleaned];
+    }
+    if (window.COMUNI_DB) {
+      for (const [comuneKey, code] of Object.entries(window.COMUNI_DB)) {
+        if (comuneKey === cleaned || comuneKey.startsWith(cleaned) || cleaned.startsWith(comuneKey)) {
+          return code;
+        }
+      }
+    }
+    return null;
+  }
+
+  function calculateCF() {
+    const nome = nomeInput ? nomeInput.value.trim() : '';
+    const cognome = cognomeInput ? cognomeInput.value.trim() : '';
+    const sesso = getSelectedSesso();
+    const dataNascita = dataNascitaInput ? dataNascitaInput.value.trim() : '';
+    const luogoNascita = luogoNascitaInput ? luogoNascitaInput.value.trim() : '';
+
+    if (!nome || !cognome || !dataNascita || !luogoNascita) {
+      return null;
+    }
+
+    const dateParts = dataNascita.split('-');
+    if (dateParts.length !== 3) return null;
+    const year = dateParts[0].slice(-2);
+    const monthIndex = parseInt(dateParts[1], 10) - 1;
+    if (monthIndex < 0 || monthIndex > 11) return null;
+    const monthCode = CF_MONTHS[monthIndex];
+    let day = parseInt(dateParts[2], 10);
+    if (isNaN(day)) return null;
+    if (sesso === 'F') day += 40;
+    const dayStr = String(day).padStart(2, '0');
+
+    const catCode = resolveCodiceCatastale(luogoNascita);
+    if (!catCode) return null;
+
+    const cogCode = getCognomeCode(cognome);
+    const nomCode = getNomeCode(nome);
+    const first15 = cogCode + nomCode + year + monthCode + dayStr + catCode;
+    const cin = getControlChar(first15);
+    return first15 + cin;
+  }
+
+  function autoComputeCodiceFiscale(isExplicitClick = false) {
+    const cf = calculateCF();
+    if (cf && cf.length === 16) {
+      cfInput.value = cf;
+      if (cfCharCount) {
+        cfCharCount.textContent = '16/16';
+        cfCharCount.classList.add('valid');
+      }
+      clearFieldError(cfInput);
+
+      cfInput.classList.remove('cf-computed-flash');
+      void cfInput.offsetWidth;
+      cfInput.classList.add('cf-computed-flash');
+
+      if (isExplicitClick) {
+        showToast(`Codice Fiscale calcolato: ${cf}`);
+      }
+    } else if (isExplicitClick) {
+      const missing = [];
+      if (!nomeInput.value.trim()) missing.push('Nome');
+      if (!cognomeInput.value.trim()) missing.push('Cognome');
+      if (!dataNascitaInput.value) missing.push('Data di nascita');
+      if (!luogoNascitaInput.value.trim()) missing.push('Luogo di nascita');
+
+      if (missing.length > 0) {
+        showToast(`Per calcolare il CF inserisci: ${missing.join(', ')}`, true);
+      } else {
+        showToast(`Comune non riconosciuto nel database catastale. Inserisci il Codice Fiscale a mano.`, true);
+      }
+    }
+  }
+
+  // Event listener per calcolo automatico su digitazione
+  [nomeInput, cognomeInput, dataNascitaInput, luogoNascitaInput].forEach(el => {
+    if (!el) return;
+    el.addEventListener('input', () => autoComputeCodiceFiscale(false));
+    el.addEventListener('change', () => autoComputeCodiceFiscale(false));
+  });
+
+  form.querySelectorAll('input[name="sesso"]').forEach(radio => {
+    radio.addEventListener('change', () => autoComputeCodiceFiscale(false));
+  });
+
+  if (autoCfBtn) {
+    autoCfBtn.addEventListener('click', () => autoComputeCodiceFiscale(true));
+  }
+
   // Modalità Dinamica: Nuovo Socio vs Rinnovo
   const opRadios = form.querySelectorAll('input[name="tipo_operazione"]');
   const rinnovoNotice = document.getElementById('rinnovoNotice');
@@ -257,6 +445,7 @@ document.addEventListener('DOMContentLoaded', () => {
 Ruolo / Qualifica:   ${data.ruolo || '-'}
 Nome:                ${data.nome || '-'}
 Cognome:             ${data.cognome || '-'}
+Sesso:               ${data.sesso || '-'}
 Data di Nascita:     ${data.data_nascita || '-'}
 Luogo di Nascita:    ${data.luogo_nascita || '-'}
 Codice Fiscale:      ${data.codice_fiscale || '-'}
@@ -303,6 +492,10 @@ Data Compilazione:   ${new Date().toLocaleString('it-IT')}
       <div class="summary-row">
         <span class="summary-label">Socio:</span>
         <span class="summary-value">${data.nome} ${data.cognome}</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Sesso:</span>
+        <span class="summary-value">${data.sesso || '-'}</span>
       </div>
       <div class="summary-row">
         <span class="summary-label">Ruolo:</span>
@@ -394,6 +587,7 @@ Data Compilazione:   ${new Date().toLocaleString('it-IT')}
           'Ruolo_Club': data.ruolo,
           'Nome': data.nome,
           'Cognome': data.cognome,
+          'Sesso': data.sesso || 'M',
           'Codice_Fiscale': data.codice_fiscale,
           'Data_Nascita': data.data_nascita,
           'Luogo_Nascita': data.luogo_nascita,

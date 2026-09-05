@@ -184,9 +184,27 @@
             </div>
           </div>
 
-          <div class="form-grid two-col">
+          <div class="form-grid birth-grid">
+            <!-- Sesso -->
+            <div class="form-group gender-group">
+              <label class="field-label">
+                Sesso <span class="required req-nuovo-socio">*</span><span class="optional-tag">opzionale</span>
+              </label>
+              <div class="gender-selector">
+                <label class="gender-radio">
+                  <input type="radio" name="sesso" value="M" checked>
+                  <span class="gender-btn">M</span>
+                </label>
+                <label class="gender-radio">
+                  <input type="radio" name="sesso" value="F">
+                  <span class="gender-btn">F</span>
+                </label>
+              </div>
+              <span class="field-hint">M / F</span>
+            </div>
+
             <!-- Data di Nascita -->
-            <div class="form-group">
+            <div class="form-group date-group">
               <label for="data_nascita" class="field-label">
                 Data di Nascita <span class="required req-nuovo-socio">*</span><span class="optional-tag">opzionale</span>
               </label>
@@ -200,11 +218,11 @@
                   required
                 >
               </div>
-              <span class="field-hint" id="data_nascita-error">Seleziona la data di nascita</span>
+              <span class="field-hint" id="data_nascita-error">Seleziona la data</span>
             </div>
 
             <!-- Luogo di Nascita -->
-            <div class="form-group">
+            <div class="form-group place-group">
               <label for="luogo_nascita" class="field-label">
                 Luogo di Nascita <span class="required req-nuovo-socio">*</span><span class="optional-tag">opzionale</span>
               </label>
@@ -213,20 +231,31 @@
                 id="luogo_nascita" 
                 name="luogo_nascita" 
                 class="form-control" 
-                placeholder="es. Mantova" 
+                placeholder="es. Mantova o Stato Estero" 
+                list="comuniList"
+                autocomplete="off"
                 required
                 autocapitalize="words"
               >
-              <span class="field-hint" id="luogo_nascita-error">Inserisci il comune di nascita</span>
+              <datalist id="comuniList"></datalist>
+              <span class="field-hint" id="luogo_nascita-error">Comune o Stato estero</span>
             </div>
           </div>
 
           <div class="form-grid single-col">
-            <!-- Codice Fiscale -->
+            <!-- Codice Fiscale con Calcolo Automatico -->
             <div class="form-group">
-              <label for="codice_fiscale" class="field-label">
-                Codice Fiscale <span class="required req-nuovo-socio">*</span><span class="optional-tag">opzionale</span>
-              </label>
+              <div class="cf-label-row">
+                <label for="codice_fiscale" class="field-label">
+                  Codice Fiscale <span class="required req-nuovo-socio">*</span><span class="optional-tag">opzionale</span>
+                </label>
+                <button type="button" id="autoCfBtn" class="btn-calc-cf" title="Ricalcola automaticamente il Codice Fiscale">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                  </svg>
+                  <span>Calcola Automatico</span>
+                </button>
+              </div>
               <div class="cf-input-container">
                 <input 
                   type="text" 
@@ -244,7 +273,7 @@
                 >
                 <span class="char-count" id="cfCharCount">0/16</span>
               </div>
-              <span class="field-hint" id="cf-error">Codice fiscale di 16 caratteri alfanumerici</span>
+              <span class="field-hint" id="cf-error">Compilato automaticamente dai dati anagrafici (modificabile a mano)</span>
             </div>
           </div>
         </section>
@@ -502,6 +531,7 @@
     </div>
   </div>
 
+  <script src="comuni.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

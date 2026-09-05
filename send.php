@@ -28,6 +28,7 @@ if (!$data) {
 $ruolo          = htmlspecialchars($data['ruolo'] ?? $data['Ruolo_Club'] ?? 'Socio');
 $nome           = htmlspecialchars($data['nome'] ?? $data['Nome'] ?? '');
 $cognome        = htmlspecialchars($data['cognome'] ?? $data['Cognome'] ?? '');
+$sesso          = htmlspecialchars($data['sesso'] ?? $data['Sesso'] ?? 'M');
 $email          = filter_var($data['email'] ?? $data['Email_Socio'] ?? '', FILTER_SANITIZE_EMAIL);
 $data_nascita   = htmlspecialchars($data['data_nascita'] ?? $data['Data_Nascita'] ?? '');
 $luogo_nascita  = htmlspecialchars($data['luogo_nascita'] ?? $data['Luogo_Nascita'] ?? '');
@@ -80,6 +81,7 @@ $messaggioHTML = "
       <table>
         <tr><th>Qualifica / Ruolo</th><td>$ruolo</td></tr>
         <tr><th>Nome e Cognome</th><td>$nome $cognome</td></tr>
+        <tr><th>Sesso</th><td>$sesso</td></tr>
         <tr><th>Codice Fiscale</th><td>$codice_fiscale</td></tr>
         <tr><th>Data di Nascita</th><td>$data_nascita</td></tr>
         <tr><th>Luogo di Nascita</th><td>$luogo_nascita</td></tr>
