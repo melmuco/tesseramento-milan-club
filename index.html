@@ -68,16 +68,57 @@
         <input type="hidden" name="_captcha" value="false">
         <input type="hidden" name="_honey" style="display:none">
 
-        <!-- Ruolo / Tipo Socio -->
+        <!-- 1. Tipo di Richiesta (in alto) -->
         <section class="form-section">
           <div class="section-header">
             <span class="section-number">1</span>
+            <h2>Tipo Richiesta</h2>
+          </div>
+          <div class="form-grid single-col">
+            <div class="form-group">
+              <div class="procedure-options">
+                <label class="radio-card">
+                  <input type="radio" name="tipo_operazione" value="Nuovo Socio" checked>
+                  <span class="radio-custom"></span>
+                  <div class="radio-text">
+                    <strong>Nuovo Socio</strong>
+                    <small>Prima iscrizione al Milan Club Marmirolo</small>
+                  </div>
+                </label>
+
+                <label class="radio-card">
+                  <input type="radio" name="tipo_operazione" value="Rinnovo">
+                  <span class="radio-custom"></span>
+                  <div class="radio-text">
+                    <strong>Rinnovo</strong>
+                    <small>Rinnovo tessera socio per la nuova stagione</small>
+                  </div>
+                </label>
+              </div>
+
+              <!-- Avviso Dinamico per Rinnovo -->
+              <div id="rinnovoNotice" class="rinnovo-notice" style="display: none;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                <span><strong>Rinnovo Tessera Socio:</strong> è obbligatorio inserire solo <strong>Nome</strong> e <strong>Cognome</strong>. Compila gli altri campi solo se vuoi aggiornare recapiti o indirizzo.</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. Ruolo / Tipo Socio -->
+        <section class="form-section">
+          <div class="section-header">
+            <span class="section-number">2</span>
             <h2>Qualifica / Ruolo nel Club</h2>
           </div>
           <div class="form-grid single-col">
             <div class="form-group">
               <label for="ruolo" class="field-label">
-                Ruolo o Qualifica <span class="required">*</span>
+                Ruolo o Qualifica <span class="required req-nuovo-socio">*</span><span class="optional-tag">opzionale</span>
               </label>
               <div class="select-wrapper">
                 <select id="ruolo" name="ruolo" class="form-control" required>
@@ -96,15 +137,15 @@
           </div>
         </section>
 
-        <!-- Dati Anagrafici -->
+        <!-- 3. Dati Anagrafici -->
         <section class="form-section">
           <div class="section-header">
-            <span class="section-number">2</span>
+            <span class="section-number">3</span>
             <h2>Dati Anagrafici</h2>
           </div>
 
           <div class="form-grid two-col">
-            <!-- Nome -->
+            <!-- Nome (sempre obbligatorio) -->
             <div class="form-group">
               <label for="nome" class="field-label">
                 Nome <span class="required">*</span>
@@ -123,7 +164,7 @@
               <span class="field-hint" id="nome-error">Inserisci il nome</span>
             </div>
 
-            <!-- Cognome -->
+            <!-- Cognome (sempre obbligatorio) -->
             <div class="form-group">
               <label for="cognome" class="field-label">
                 Cognome <span class="required">*</span>
@@ -147,7 +188,7 @@
             <!-- Data di Nascita -->
             <div class="form-group">
               <label for="data_nascita" class="field-label">
-                Data di Nascita <span class="required">*</span>
+                Data di Nascita <span class="required req-nuovo-socio">*</span><span class="optional-tag">opzionale</span>
               </label>
               <div class="input-with-icon">
                 <input 
@@ -165,7 +206,7 @@
             <!-- Luogo di Nascita -->
             <div class="form-group">
               <label for="luogo_nascita" class="field-label">
-                Luogo di Nascita <span class="required">*</span>
+                Luogo di Nascita <span class="required req-nuovo-socio">*</span><span class="optional-tag">opzionale</span>
               </label>
               <input 
                 type="text" 
@@ -184,7 +225,7 @@
             <!-- Codice Fiscale -->
             <div class="form-group">
               <label for="codice_fiscale" class="field-label">
-                Codice Fiscale <span class="required">*</span>
+                Codice Fiscale <span class="required req-nuovo-socio">*</span><span class="optional-tag">opzionale</span>
               </label>
               <div class="cf-input-container">
                 <input 
@@ -208,10 +249,10 @@
           </div>
         </section>
 
-        <!-- Residenza e Domicilio -->
+        <!-- 4. Residenza e Domicilio -->
         <section class="form-section">
           <div class="section-header">
-            <span class="section-number">3</span>
+            <span class="section-number">4</span>
             <h2>Indirizzo di Residenza</h2>
           </div>
 
@@ -219,7 +260,7 @@
             <!-- Indirizzo -->
             <div class="form-group address-street">
               <label for="indirizzo" class="field-label">
-                Indirizzo (Via / Piazza / Viale) <span class="required">*</span>
+                Indirizzo (Via / Piazza / Viale) <span class="required req-nuovo-socio">*</span><span class="optional-tag">opzionale</span>
               </label>
               <input 
                 type="text" 
@@ -237,7 +278,7 @@
             <!-- Numero Civico -->
             <div class="form-group address-number">
               <label for="civico" class="field-label">
-                N. Civico <span class="required">*</span>
+                N. Civico <span class="required req-nuovo-socio">*</span><span class="optional-tag">opzionale</span>
               </label>
               <input 
                 type="text" 
@@ -256,7 +297,7 @@
             <!-- CAP -->
             <div class="form-group">
               <label for="cap" class="field-label">
-                CAP <span class="required">*</span>
+                CAP <span class="required req-nuovo-socio">*</span><span class="optional-tag">opzionale</span>
               </label>
               <input 
                 type="text" 
@@ -276,7 +317,7 @@
             <!-- Località / Comune -->
             <div class="form-group locality-group">
               <label for="localita" class="field-label">
-                Località / Comune <span class="required">*</span>
+                Località / Comune <span class="required req-nuovo-socio">*</span><span class="optional-tag">opzionale</span>
               </label>
               <input 
                 type="text" 
@@ -294,7 +335,7 @@
             <!-- Provincia -->
             <div class="form-group prov-group">
               <label for="provincia" class="field-label">
-                Provincia <span class="required">*</span>
+                Provincia <span class="required req-nuovo-socio">*</span><span class="optional-tag">opzionale</span>
               </label>
               <input 
                 type="text" 
@@ -311,10 +352,10 @@
           </div>
         </section>
 
-        <!-- Recapiti di Contatto -->
+        <!-- 5. Recapiti di Contatto -->
         <section class="form-section">
           <div class="section-header">
-            <span class="section-number">4</span>
+            <span class="section-number">5</span>
             <h2>Recapiti di Contatto</h2>
           </div>
 
@@ -322,7 +363,7 @@
             <!-- Email -->
             <div class="form-group">
               <label for="email" class="field-label">
-                Indirizzo Email <span class="required">*</span>
+                Indirizzo Email <span class="required req-nuovo-socio">*</span><span class="optional-tag">opzionale</span>
               </label>
               <div class="input-with-icon">
                 <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -346,7 +387,7 @@
             <!-- Telefono Cellulare -->
             <div class="form-group">
               <label for="cellulare" class="field-label">
-                Telefono Cellulare <span class="required">*</span>
+                Telefono Cellulare <span class="required req-nuovo-socio">*</span><span class="optional-tag">opzionale</span>
               </label>
               <div class="input-with-icon">
                 <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -369,40 +410,16 @@
           </div>
         </section>
 
-        <!-- Tipo di Pratica / Procedure Speciali -->
+        <!-- 6. Note Aggiuntive (facoltativo) -->
         <section class="form-section">
           <div class="section-header">
-            <span class="section-number">5</span>
-            <h2>Tipo Richiesta &amp; Note</h2>
+            <span class="section-number">6</span>
+            <h2>Note &amp; Comunicazioni (facoltativo)</h2>
           </div>
 
           <div class="form-grid single-col">
             <div class="form-group">
-              <label class="field-label">Tipo richiesta: <span class="required">*</span></label>
-              <div class="procedure-options">
-                <label class="radio-card">
-                  <input type="radio" name="tipo_operazione" value="Nuovo Socio" checked>
-                  <span class="radio-custom"></span>
-                  <div class="radio-text">
-                    <strong>Nuovo Socio</strong>
-                    <small>Prima iscrizione al Milan Club Marmirolo</small>
-                  </div>
-                </label>
-
-                <label class="radio-card">
-                  <input type="radio" name="tipo_operazione" value="Rinnovo">
-                  <span class="radio-custom"></span>
-                  <div class="radio-text">
-                    <strong>Rinnovo</strong>
-                    <small>Rinnovo tessera socio per la nuova stagione</small>
-                  </div>
-                </label>
-              </div>
-            </div>
-
-            <!-- Note / Messaggio Aggiuntivo -->
-            <div class="form-group">
-              <label for="note" class="field-label">Note o comunicazioni aggiuntive (facoltativo)</label>
+              <label for="note" class="field-label">Note o comunicazioni per la segreteria</label>
               <textarea 
                 id="note" 
                 name="note" 

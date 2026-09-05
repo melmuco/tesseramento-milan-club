@@ -63,46 +63,152 @@ document.addEventListener('DOMContentLoaded', () => {
     input.addEventListener('change', () => clearFieldError(input));
   });
 
-  // Validazione campi obbligatori
+  // Modalità Dinamica: Nuovo Socio vs Rinnovo
+  const opRadios = form.querySelectorAll('input[name="tipo_operazione"]');
+  const rinnovoNotice = document.getElementById('rinnovoNotice');
+  const nonRinnovoFields = [
+    'ruolo', 'data_nascita', 'luogo_nascita', 'codice_fiscale',
+    'indirizzo', 'civico', 'cap', 'localita', 'provincia', 'email', 'cellulare'
+  ];
+
+  function getSelectedTipoOperazione() {
+    const checkedRadio = form.querySelector('input[name="tipo_operazione"]:checked');
+    return checkedRadio ? checkedRadio.value : 'Nuovo Socio';
+  }
+
+  function updateFormMode() {
+    const isRinnovo = getSelectedTipoOperazione() === 'Rinnovo';
+
+    if (isRinnovo) {
+      form.classList.add('mode-rinnovo');
+      if (rinnovoNotice) rinnovoNotice.style.display = 'flex';
+
+      // Nel rinnovo, solo Nome e Cognome sono obbligatori
+      nonRinnovoFields.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.required = false;
+          clearFieldError(el);
+        }
+      });
+    } else {
+      form.classList.remove('mode-rinnovo');
+      if (rinnovoNotice) rinnovoNotice.style.display = 'none';
+
+      // Per nuovo socio tutti i campi anagrafici e recapiti sono obbligatori
+      nonRinnovoFields.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.required = true;
+      });
+    }
+  }
+
+  opRadios.forEach(radio => {
+    radio.addEventListener('change', updateFormMode);
+  });
+  updateFormMode();
+
+  // Validazione campi
   function validateForm() {
     let isValid = true;
     let firstInvalidField = null;
 
-    // Reset stati
+    // Reset stati di errore
     form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
-    form.querySelectorAll('.checkbox-container.has-error').forEach(el => el.classList.remove('has-error'));
 
-    const requiredFields = [
-      { id: 'ruolo', label: 'Ruolo' },
-      { id: 'nome', label: 'Nome' },
-      { id: 'cognome', label: 'Cognome' },
-      { id: 'data_nascita', label: 'Data di nascita' },
-      { id: 'luogo_nascita', label: 'Luogo di nascita' },
-      { id: 'codice_fiscale', label: 'Codice Fiscale', customValidate: (val) => val.length === 16 },
-      { id: 'indirizzo', label: 'Indirizzo' },
-      { id: 'civico', label: 'Numero civico' },
-      { id: 'cap', label: 'CAP', customValidate: (val) => /^\d{5}$/.test(val) },
-      { id: 'localita', label: 'Località' },
-      { id: 'provincia', label: 'Provincia' },
-      { id: 'email', label: 'Email', customValidate: (val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) },
-      { id: 'cellulare', label: 'Cellulare', customValidate: (val) => val.trim().length >= 6 }
-    ];
+    const isRinnovo = getSelectedTipoOperazione() === 'Rinnovo';
 
-    for (const item of requiredFields) {
-      const field = document.getElementById(item.id);
-      if (!field) continue;
+    if (isRinnovo) {
+      // Per il RINNOVO: solo Nome e Cognome sono obbligatori
+      const rinnovoRequired = [
+        { id: 'nome', label: 'Nome' },
+        { id: 'cognome', label: 'Cognome' }
+      ];
 
-      const val = field.value.trim();
-      let fieldValid = val !== '';
-
-      if (fieldValid && item.customValidate) {
-        fieldValid = item.customValidate(val);
+      for (const item of rinnovoRequired) {
+        const field = document.getElementById(item.id);
+        if (!field) continue;
+        const val = field.value.trim();
+        if (val === '') {
+          showFieldError(field);
+          isValid = false;
+          if (!firstInvalidField) firstInvalidField = field;
+        }
       }
 
-      if (!fieldValid) {
-        showFieldError(field);
-        isValid = false;
-        if (!firstInvalidField) firstInvalidField = field;
+      // Se l'utente compila campi opzionali, validiamo il formato
+      const cfField = document.getElementById('codice_fiscale');
+      if (cfField && cfField.value.trim() !== '') {
+        const cfVal = cfField.value.trim();
+        const cfRegex = /^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$/;
+        if (cfVal.length !== 16 || !cfRegex.test(cfVal)) {
+          showFieldError(cfField);
+          isValid = false;
+          if (!firstInvalidField) firstInvalidField = cfField;
+        }
+      }
+
+      const capField = document.getElementById('cap');
+      if (capField && capField.value.trim() !== '') {
+        if (!/^\d{5}$/.test(capField.value.trim())) {
+          showFieldError(capField);
+          isValid = false;
+          if (!firstInvalidField) firstInvalidField = capField;
+        }
+      }
+
+      const emailField = document.getElementById('email');
+      if (emailField && emailField.value.trim() !== '') {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailField.value.trim())) {
+          showFieldError(emailField);
+          isValid = false;
+          if (!firstInvalidField) firstInvalidField = emailField;
+        }
+      }
+
+      const cellField = document.getElementById('cellulare');
+      if (cellField && cellField.value.trim() !== '') {
+        if (cellField.value.trim().length < 6) {
+          showFieldError(cellField);
+          isValid = false;
+          if (!firstInvalidField) firstInvalidField = cellField;
+        }
+      }
+
+    } else {
+      // Per NUOVO SOCIO: tutti i campi sono obbligatori
+      const requiredFields = [
+        { id: 'ruolo', label: 'Ruolo' },
+        { id: 'nome', label: 'Nome' },
+        { id: 'cognome', label: 'Cognome' },
+        { id: 'data_nascita', label: 'Data di nascita' },
+        { id: 'luogo_nascita', label: 'Luogo di nascita' },
+        { id: 'codice_fiscale', label: 'Codice Fiscale', customValidate: (val) => val.length === 16 },
+        { id: 'indirizzo', label: 'Indirizzo' },
+        { id: 'civico', label: 'Numero civico' },
+        { id: 'cap', label: 'CAP', customValidate: (val) => /^\d{5}$/.test(val) },
+        { id: 'localita', label: 'Località' },
+        { id: 'provincia', label: 'Provincia' },
+        { id: 'email', label: 'Email', customValidate: (val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) },
+        { id: 'cellulare', label: 'Cellulare', customValidate: (val) => val.trim().length >= 6 }
+      ];
+
+      for (const item of requiredFields) {
+        const field = document.getElementById(item.id);
+        if (!field) continue;
+
+        const val = field.value.trim();
+        let fieldValid = val !== '';
+
+        if (fieldValid && item.customValidate) {
+          fieldValid = item.customValidate(val);
+        }
+
+        if (!fieldValid) {
+          showFieldError(field);
+          isValid = false;
+          if (!firstInvalidField) firstInvalidField = field;
+        }
       }
     }
 
@@ -191,36 +297,36 @@ Data Compilazione:   ${new Date().toLocaleString('it-IT')}
 
     modalSummary.innerHTML = `
       <div class="summary-row">
+        <span class="summary-label">Tipo Richiesta:</span>
+        <span class="summary-value">${data.tipo_operazione}</span>
+      </div>
+      <div class="summary-row">
         <span class="summary-label">Socio:</span>
         <span class="summary-value">${data.nome} ${data.cognome}</span>
       </div>
       <div class="summary-row">
         <span class="summary-label">Ruolo:</span>
-        <span class="summary-value">${data.ruolo}</span>
+        <span class="summary-value">${data.ruolo || 'Socio Ordinario'}</span>
       </div>
       <div class="summary-row">
         <span class="summary-label">Codice Fiscale:</span>
-        <span class="summary-value">${data.codice_fiscale}</span>
+        <span class="summary-value">${data.codice_fiscale || '-'}</span>
       </div>
       <div class="summary-row">
         <span class="summary-label">Data & Luogo di Nascita:</span>
-        <span class="summary-value">${data.data_nascita} (${data.luogo_nascita})</span>
+        <span class="summary-value">${data.data_nascita ? `${data.data_nascita} (${data.luogo_nascita || ''})` : '-'}</span>
       </div>
       <div class="summary-row">
         <span class="summary-label">Residenza:</span>
-        <span class="summary-value">${data.indirizzo} ${data.civico}, ${data.cap} ${data.localita} (${data.provincia})</span>
+        <span class="summary-value">${data.indirizzo ? `${data.indirizzo} ${data.civico || ''}, ${data.cap || ''} ${data.localita || ''} (${data.provincia || ''})` : '-'}</span>
       </div>
       <div class="summary-row">
         <span class="summary-label">Email:</span>
-        <span class="summary-value">${data.email}</span>
+        <span class="summary-value">${data.email || '-'}</span>
       </div>
       <div class="summary-row">
         <span class="summary-label">Cellulare:</span>
-        <span class="summary-value">${data.cellulare}</span>
-      </div>
-      <div class="summary-row">
-        <span class="summary-label">Operazione:</span>
-        <span class="summary-value">${data.tipo_operazione}</span>
+        <span class="summary-value">${data.cellulare || '-'}</span>
       </div>
       ${data.note ? `
       <div class="summary-row">
@@ -244,6 +350,7 @@ Data Compilazione:   ${new Date().toLocaleString('it-IT')}
       closeModal();
       form.reset();
       if (cfCharCount) cfCharCount.textContent = '0/16';
+      setTimeout(updateFormMode, 50);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   }
@@ -359,6 +466,7 @@ Data Compilazione:   ${new Date().toLocaleString('it-IT')}
         cfCharCount.textContent = '0/16';
         cfCharCount.classList.remove('valid');
       }
+      setTimeout(updateFormMode, 50);
       showToast('Modulo reimpostato');
     });
   }
