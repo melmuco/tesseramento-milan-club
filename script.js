@@ -56,6 +56,96 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // --- AUTO-COMPILAZIONE CAP e PROVINCIA da Località ---
+  const localitaInput = document.getElementById('localita');
+  const localitaDatalist = document.getElementById('localitaList');
+
+  // Popola datalist per il campo Località con i nomi dei comuni
+  if (localitaDatalist && window.LOCALITA_NAMES && window.LOCALITA_NAMES.length > 0) {
+    const frag = document.createDocumentFragment();
+    window.LOCALITA_NAMES.forEach(lName => {
+      const opt = document.createElement('option');
+      opt.value = lName;
+      frag.appendChild(opt);
+    });
+    localitaDatalist.appendChild(frag);
+  }
+
+  function resolveLocalitaCAP(localitaValue) {
+    if (!localitaValue || !window.CAP_DB) return null;
+    const raw = localitaValue.trim();
+    // Rimuovi eventuale provincia tra parentesi: "Marmirolo (MN)" -> "MARMIROLO"
+    const cleaned = raw.replace(/\s*\(.*?\)\s*/g, '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toUpperCase()
+      .trim();
+
+    // Lookup diretto
+    if (window.CAP_DB[cleaned]) {
+      return window.CAP_DB[cleaned];
+    }
+
+    // Fallback: cerca corrispondenza parziale
+    for (const [comuneKey, info] of Object.entries(window.CAP_DB)) {
+      if (comuneKey === cleaned || comuneKey.startsWith(cleaned) || cleaned.startsWith(comuneKey)) {
+        return info;
+      }
+    }
+    return null;
+  }
+
+  function autoFillCapProvincia() {
+    if (!localitaInput) return;
+    const localitaVal = localitaInput.value.trim();
+    if (!localitaVal) return;
+
+    const info = resolveLocalitaCAP(localitaVal);
+    if (info) {
+      // Auto-fill CAP
+      if (capInput && (!capInput.value || capInput._autoFilled)) {
+        capInput.value = info.c;
+        capInput._autoFilled = true;
+        clearFieldError(capInput);
+        // Flash animation
+        capInput.classList.remove('cf-computed-flash');
+        void capInput.offsetWidth;
+        capInput.classList.add('cf-computed-flash');
+      }
+      // Auto-fill Provincia
+      if (provInput && (!provInput.value || provInput._autoFilled)) {
+        provInput.value = info.p;
+        provInput._autoFilled = true;
+        clearFieldError(provInput);
+        // Flash animation
+        provInput.classList.remove('cf-computed-flash');
+        void provInput.offsetWidth;
+        provInput.classList.add('cf-computed-flash');
+      }
+    }
+  }
+
+  if (localitaInput) {
+    // Resetta flag auto-fill quando l'utente modifica manualmente CAP o Provincia
+    if (capInput) {
+      capInput.addEventListener('input', () => {
+        if (document.activeElement === capInput) {
+          capInput._autoFilled = false;
+        }
+      });
+    }
+    if (provInput) {
+      provInput.addEventListener('input', () => {
+        if (document.activeElement === provInput) {
+          provInput._autoFilled = false;
+        }
+      });
+    }
+
+    localitaInput.addEventListener('input', () => autoFillCapProvincia());
+    localitaInput.addEventListener('change', () => autoFillCapProvincia());
+  }
+
   // Gestione rimozione errori all'input dell'utente
   const inputs = form.querySelectorAll('input, select, textarea');
   inputs.forEach(input => {

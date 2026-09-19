@@ -354,11 +354,13 @@
                 name="localita" 
                 class="form-control" 
                 placeholder="es. Marmirolo" 
-                autocomplete="address-level2" 
+                list="localitaList"
+                autocomplete="off" 
                 required
                 autocapitalize="words"
               >
-              <span class="field-hint">Comune o frazione</span>
+              <datalist id="localitaList"></datalist>
+              <span class="field-hint">Digita il comune per compilare automaticamente CAP e Provincia</span>
             </div>
 
             <!-- Provincia -->
@@ -531,6 +533,7 @@
     </div>
   </div>
 
+  <script src="cap_db.js"></script>
   <script src="comuni.js"></script>
   <script src="script.js"></script>
 </body>
