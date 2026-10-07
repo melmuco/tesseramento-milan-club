@@ -707,6 +707,10 @@ input[type="date"].form-control {
   display: inline-block !important;
 }
 
+.mode-rinnovo .rinnovo-hide {
+  display: none !important;
+}
+
 .optional-tag {
   display: none;
   font-size: 0.72rem;
