@@ -323,26 +323,6 @@
           </div>
 
           <div class="form-grid three-col">
-            <!-- CAP -->
-            <div class="form-group">
-              <label for="cap" class="field-label">
-                CAP <span class="required req-nuovo-socio">*</span><span class="optional-tag">opzionale</span>
-              </label>
-              <input 
-                type="text" 
-                id="cap" 
-                name="cap" 
-                class="form-control" 
-                placeholder="es. 46045" 
-                pattern="[0-9]{5}" 
-                maxlength="5" 
-                inputmode="numeric" 
-                autocomplete="postal-code" 
-                required
-              >
-              <span class="field-hint">5 cifre numeriche</span>
-            </div>
-
             <!-- Località / Comune -->
             <div class="form-group locality-group">
               <label for="localita" class="field-label">
@@ -361,6 +341,26 @@
               >
               <datalist id="localitaList"></datalist>
               <span class="field-hint">Digita il comune per compilare automaticamente CAP e Provincia</span>
+            </div>
+
+            <!-- CAP -->
+            <div class="form-group">
+              <label for="cap" class="field-label">
+                CAP <span class="required req-nuovo-socio">*</span><span class="optional-tag">opzionale</span>
+              </label>
+              <input 
+                type="text" 
+                id="cap" 
+                name="cap" 
+                class="form-control" 
+                placeholder="es. 46045" 
+                pattern="[0-9]{5}" 
+                maxlength="5" 
+                inputmode="numeric" 
+                autocomplete="postal-code" 
+                required
+              >
+              <span class="field-hint">5 cifre numeriche</span>
             </div>
 
             <!-- Provincia -->
